@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import TableContact from "./layout/TableContact/TableContact";
 import {useState} from "react";
+import FormContact from "./layout/FormContact/FormContact";
 
 const App = () => {
     const [contacts, setContacts] = useState(
@@ -14,12 +15,12 @@ const App = () => {
         ))
     )
 
-    function addContact() {
-        let index = contacts.length + 1;
+    const addContact = (contactName, contactEmail) => {
+        const newId = Math.max(...contacts.map(contact => contact.id)) + 1;
         const item = {
-            id: index,
-            name: `Имя фамилия ${index}`,
-            email: `email${index}@example.com`
+            id: newId,
+            name: contactName,
+            email: contactEmail
         }
         setContacts([...contacts, item]);
     }
@@ -33,16 +34,7 @@ const App = () => {
 
                 <div className="card-body">
                     <TableContact contacts={contacts}/>
-                    <div>
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => {
-                                addContact()
-                            }}
-                        >
-                            Добавить контакт
-                        </button>
-                    </div>
+                    <FormContact addContact={addContact}/>
                 </div>
             </div>
         </div>
