@@ -1,28 +1,37 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import TableContact from "./layout/TableContact/TableContact";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import FormContact from "./layout/FormContact/FormContact";
+import axios from "axios";
+
+const baseApiUrl = process.env.REACT_APP_API_URL;
 
 const App = () => {
-    const [contacts, setContacts] = useState(
-        Array.from({length: 5}, (_, i) => (
-            {
-                id: i + 1,
-                name: `Имя фамилия ${i + 1}`,
-                email: `email${i + 1}@example.com`
-            }
-        ))
-    )
+    const url = `${baseApiUrl}/contacts`;
+    const [contacts, setContacts] = useState([])
+
+    useEffect(() => {
+        axios.get(url)
+            .then(
+                res => setContacts(res.data)
+            );
+    }, []);
 
     const addContact = (contactName, contactEmail) => {
-        const newId = Math.max(...contacts.map(contact => contact.id)) + 1;
+        const newId = contacts.length > 0
+            ? Math.max(...contacts.map(contact => contact.id)) + 1
+            : 1;
         const item = {
             id: newId,
             name: contactName,
             email: contactEmail
         }
         setContacts([...contacts, item]);
+    }
+
+    const deleteContact = (id) => {
+        setContacts(contacts.filter(contact => contact.id !== id));
     }
 
     return (
@@ -33,7 +42,10 @@ const App = () => {
                 </div>
 
                 <div className="card-body">
-                    <TableContact contacts={contacts}/>
+                    <TableContact
+                        contacts={contacts}
+                        deleteContact={deleteContact}
+                    />
                     <FormContact addContact={addContact}/>
                 </div>
             </div>

@@ -5,7 +5,7 @@ const FormContact = (props) => {
     const [contactEmail, setContactEmail] = useState("");
 
     const submit = () => {
-        if (!contactName || !contactEmail) {
+        if (!contactName.trim() || !contactEmail.trim()) {
             alert("Заполните все поля");
             return;
         }
@@ -16,7 +16,6 @@ const FormContact = (props) => {
 
     return (
         <div>
-
             <div className="mb-3">
                 <form>
                     <div className="mb-3">
