@@ -5,7 +5,13 @@ const FormContact = (props) => {
     const [contactEmail, setContactEmail] = useState("");
 
     const submit = () => {
+        if (!contactName || !contactEmail) {
+            alert("Заполните все поля");
+            return;
+        }
         props.addContact(contactName, contactEmail);
+        setContactName("");
+        setContactEmail("");
     }
 
     return (
@@ -15,11 +21,21 @@ const FormContact = (props) => {
                 <form>
                     <div className="mb-3">
                         <label className="form-label"> Введите имя: </label>
-                        <input type="text" className="form-control" onChange={(e) => setContactName(e.target.value)}/>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={contactName}
+                            onChange={(e) => setContactName(e.target.value)}
+                        />
                     </div>
                     <div className="mb-3">
                         <label className="form-label"> Введите e-mail: </label>
-                        <input type="text" className="form-control" onChange={(e) => setContactEmail(e.target.value)}/>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={contactEmail}
+                            onChange={(e) => setContactEmail(e.target.value)}
+                        />
                     </div>
                 </form>
             </div>
