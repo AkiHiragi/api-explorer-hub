@@ -1,39 +1,48 @@
-function App() {
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import TableContact from "./layout/TableContact/TableContact";
+import {useState} from "react";
+
+const App = () => {
+    const [contacts, setContacts] = useState(
+        Array.from({length: 5}, (_, i) => (
+            {
+                id: i + 1,
+                name: `Имя фамилия ${i + 1}`,
+                email: `email${i + 1}@example.com`
+            }
+        ))
+    )
+
+    function addContact() {
+        let index = contacts.length + 1;
+        const item = {
+            id: index,
+            name: `Имя фамилия ${index}`,
+            email: `email${index}@example.com`
+        }
+        setContacts([...contacts, item]);
+    }
+
     return (
-        <div>
-            <div>
-                <div>
+        <div className="container mt-5">
+            <div className="card">
+                <div className="card-header">
                     <h1>Список контактов</h1>
                 </div>
-                <div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Имя</th>
-                                <th>E-mail</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Имя фамилия 1</td>
-                                <td>example@email1.ru</td>
-                            </tr>
 
-                            <tr>
-                                <td>2</td>
-                                <td>Имя фамилия 2</td>
-                                <td>example@email2.ru</td>
-                            </tr>
-
-                            <tr>
-                                <td>3</td>
-                                <td>Имя фамилия 3</td>
-                                <td>example@email3.ru</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div className="card-body">
+                    <TableContact contacts={contacts}/>
+                    <div>
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                                addContact()
+                            }}
+                        >
+                            Добавить контакт
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
