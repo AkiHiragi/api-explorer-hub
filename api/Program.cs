@@ -14,14 +14,14 @@ builder.Services.AddSwaggerGen(opt =>
     });
 });
 builder.Services.AddControllers();
-builder.Services.AddSingleton<ContactStorage>();
+builder.Services.AddSingleton<IStorage, InMemoryStorage>();
 
 builder.Services.AddCors(opt =>
     opt.AddPolicy("CorsPolicy", policy =>
     {
         policy.AllowAnyMethod()
-            .AllowAnyHeader()
-            .WithOrigins("http://localhost:3000");
+              .AllowAnyHeader()
+              .WithOrigins("http://localhost:3000");
     })
 );
 

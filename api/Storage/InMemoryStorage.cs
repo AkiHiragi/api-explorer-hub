@@ -6,9 +6,9 @@ using Bogus;
 
 namespace api.Storage;
 
-public class ContactStorage
+public class InMemoryStorage : IStorage
 {
-    public ContactStorage()
+    public InMemoryStorage()
     {
         Contacts = new Faker<Contact>("ru")
                   .RuleFor(c => c.Id, f => f.IndexFaker)
