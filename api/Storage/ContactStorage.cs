@@ -33,14 +33,16 @@ public class ContactStorage
 
     public bool Add(Contact contact)
     {
-        return Contacts.All(c => c.Id != contact.Id);
+        if (Contacts.Any(c => c.Id == contact.Id)) return false;
+        Contacts.Add(contact);
+        return true;
     }
 
     public bool DeleteContactById(int id)
     {
         var contact = GetContactById(id);
         if (contact == null) return false;
-        
+
         Contacts.Remove(contact);
         return true;
     }
@@ -49,10 +51,9 @@ public class ContactStorage
     {
         var contact = GetContactById(id);
         if (contact == null) return false;
-        
+
         contact.Name = dto.Name;
         contact.Email = dto.Email;
         return true;
-
     }
 }

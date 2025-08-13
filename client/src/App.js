@@ -27,10 +27,15 @@ const App = () => {
             name: contactName,
             email: contactEmail
         }
+        
+        const url = `${baseApiUrl}/contacts`;
+        axios.post(url, item);
         setContacts([...contacts, item]);
     }
 
     const deleteContact = (id) => {
+        const url = `${baseApiUrl}/contacts/${id}`;
+        axios.delete(url);
         setContacts(contacts.filter(contact => contact.id !== id));
     }
 

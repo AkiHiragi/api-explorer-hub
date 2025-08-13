@@ -53,7 +53,7 @@ public class ContactManagementController : BaseController
     public IActionResult Create([FromBody] Contact contact)
     {
         if (storage.Add(contact))
-            return Created("Контакт успешно создан", contact);
+            return Created($"/contacts/{contact.Id}", contact);
         return Conflict("Контакт с указанным ID уже существует");
     }
 }
