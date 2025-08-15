@@ -31,9 +31,10 @@ public class InMemoryStorage : IStorage
 
     public Contact GetContactById(int id) => Contacts.Find(contact => contact.Id == id);
 
-    public bool Add(Contact contact)
+    public bool Add(ContactDto dto)
     {
-        if (Contacts.Any(c => c.Id == contact.Id)) return false;
+        if (Contacts.Any(c => c.Email == dto.Email)) return false;
+        var contact = new Contact { Email = dto.Email, Name = dto.Name };
         Contacts.Add(contact);
         return true;
     }

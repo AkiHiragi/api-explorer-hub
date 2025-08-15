@@ -46,15 +46,15 @@ public class SqLiteStorage(string connectionString) : IStorage
             : null;
     }
 
-    public bool Add(Contact contact)
+    public bool Add(ContactDto dto)
     {
         using var connection = new SqliteConnection(connectionString);
         connection.Open();
 
         using var command = connection.CreateCommand();
         command.CommandText = "INSERT INTO contacts(name,email) VALUES (@name,@email)";
-        command.Parameters.AddWithValue("@name", contact.Name);
-        command.Parameters.AddWithValue("@email", contact.Email);
+        command.Parameters.AddWithValue("@name", dto.Name);
+        command.Parameters.AddWithValue("@email", dto.Email);
 
         return command.ExecuteNonQuery() > 0;
     }

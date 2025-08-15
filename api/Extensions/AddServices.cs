@@ -1,4 +1,7 @@
+using api.DataContext;
+using api.Seed;
 using api.Storage;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -18,8 +21,12 @@ public static class AddServices
             });
         });
         services.AddControllers();
+
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        services.AddSingleton<IStorage>(new SqLiteStorage(connectionString));
+        services.AddDbContext<SqliteDbContext>(opt=>opt.UseSqlite(connectionString));
+        
+        services.AddScoped<IStorage, SqliteEfStorage>();
+        services.AddScoped<IInitializer, SqliteFakerInitializer>();
 
         services.AddCors(opt =>
             opt.AddPolicy("CorsPolicy", policy =>

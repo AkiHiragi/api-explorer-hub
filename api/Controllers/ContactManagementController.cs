@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using api.DTO;
@@ -50,10 +51,10 @@ public class ContactManagementController : BaseController
     }
 
     [HttpPost("contacts")]
-    public IActionResult Create([FromBody] Contact contact)
+    public IActionResult Create([FromBody] ContactDto dto)
     {
-        if (storage.Add(contact))
-            return Created($"/contacts/{contact.Id}", contact);
+        if (storage.Add(dto))
+            return Created(string.Empty, dto);
         return Conflict("Контакт с указанным ID уже существует");
     }
 }
