@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using api.DTO;
 using api.Models;
@@ -41,8 +42,8 @@ public class SqLiteStorage(string connectionString) : IStorage
         command.Parameters.AddWithValue("@id", id);
 
         using var reader = command.ExecuteReader();
-        return reader.Read() 
-            ? new Contact { Id = reader.GetInt32(0), Name = reader.GetString(1), Email = reader.GetString(2) } 
+        return reader.Read()
+            ? new Contact { Id = reader.GetInt32(0), Name = reader.GetString(1), Email = reader.GetString(2) }
             : null;
     }
 
@@ -90,5 +91,39 @@ public class SqLiteStorage(string connectionString) : IStorage
         command.Parameters.AddWithValue("@id", id);
 
         return command.ExecuteNonQuery() > 0;
+    }
+
+    public (List<Contact>, int TotalCount) GetContacts(int pageNumber, int pageSize)
+    {
+        using var connection = new SqliteConnection(connectionString);
+        connection.Open();
+
+        using var listCommand = connection.CreateCommand();
+        listCommand.CommandText = """
+                                  SELECT * FROM contacts
+                                  LIMIT @pageSize
+                                  OFFSET @offset
+                                  """;
+        listCommand.Parameters.AddWithValue("@pageNumber", pageNumber);
+        listCommand.Parameters.AddWithValue("@offset", (pageNumber - 1) * pageSize);
+
+        var contacts = new List<Contact>();
+
+        using var reader = listCommand.ExecuteReader();
+        while (reader.Read())
+        {
+            contacts.Add(new Contact
+            {
+                Id = reader.GetInt32(0),
+                Name = reader.GetString(1),
+                Email = reader.GetString(2),
+            });
+        }
+
+        using var countCommand = connection.CreateCommand();
+        countCommand.CommandText = "SELECT COUNT(*) FROM contacts";
+        var totalCount = Convert.ToInt32(countCommand.ExecuteScalar());
+
+        return (contacts, totalCount);
     }
 }

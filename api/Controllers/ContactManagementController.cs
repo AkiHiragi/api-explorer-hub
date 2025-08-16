@@ -8,15 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
-public class ContactManagementController : BaseController
+public class ContactManagementController(IStorage storage) : BaseController
 {
-    private readonly IStorage storage;
-
-    public ContactManagementController(IStorage storage)
-    {
-        this.storage = storage;
-    }
-
     [HttpGet("contacts")]
     public ActionResult<List<Contact>> GetContacts()
     {
@@ -56,5 +49,18 @@ public class ContactManagementController : BaseController
         if (storage.Add(dto))
             return Created(string.Empty, dto);
         return Conflict("Контакт с указанным ID уже существует");
+    }
+
+    [HttpGet("contacts/page")]
+    public IActionResult GetContacts(int pageNumber = 1, int pageSize = 10)
+    {
+        var (data, totalCount) = storage.GetContacts(pageNumber, pageSize);
+        return Ok(new
+        {
+            data,
+            totalCount,
+            pageNumber,
+            pageSize
+        });
     }
 }

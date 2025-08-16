@@ -15,7 +15,7 @@ public class SqliteEfStorage(SqliteDbContext context) : IStorage
     public bool Add(ContactDto dto)
     {
         if (context.Contacts.Any(c => c.Email == dto.Email)) return false;
-        
+
         context.Contacts.Add(new Contact { Name = dto.Name, Email = dto.Email });
         context.SaveChanges();
         return true;
@@ -25,10 +25,10 @@ public class SqliteEfStorage(SqliteDbContext context) : IStorage
     {
         var contact = GetContactById(id);
         if (contact == null) return false;
-        
+
         context.Contacts.Remove(contact);
         context.SaveChanges();
-        
+
         return true;
     }
 
@@ -40,7 +40,12 @@ public class SqliteEfStorage(SqliteDbContext context) : IStorage
         contact.Name = dto.Name;
         contact.Email = dto.Email;
         context.SaveChanges();
-        
+
         return true;
+    }
+
+    public (List<Contact>, int TotalCount) GetContacts(int pageNumber, int pageSize)
+    {
+        return (context.Contacts.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList(), context.Contacts.Count());
     }
 }

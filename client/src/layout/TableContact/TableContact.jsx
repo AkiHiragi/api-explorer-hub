@@ -8,6 +8,7 @@ const TableContact = (props) => {
                 <th>#</th>
                 <th>Имя</th>
                 <th>E-mail</th>
+                <th>Детали</th>
             </tr>
             </thead>
             <tbody>
@@ -17,7 +18,6 @@ const TableContact = (props) => {
                     id={contact.id}
                     name={contact.name}
                     email={contact.email}
-                    deleteContact={props.deleteContact}
                 />
             ))}
             </tbody>

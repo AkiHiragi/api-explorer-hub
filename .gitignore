@@ -9,6 +9,10 @@ appsettings.json
 # dotenv files
 .env
 
+## database files
+*.db
+*.sqlite
+
 # User-specific files
 *.rsuser
 *.suo

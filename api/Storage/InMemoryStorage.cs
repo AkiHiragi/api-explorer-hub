@@ -11,18 +11,18 @@ public class InMemoryStorage : IStorage
     public InMemoryStorage()
     {
         Contacts = new Faker<Contact>("ru")
-                  .RuleFor(c => c.Id, f => f.IndexFaker)
-                  .RuleFor(c => c.Name, f => f.Name.FullName())
-                  .RuleFor(c => c.Email, (f, c) =>
-                   {
-                       var nameParts = c.Name.Split(' ');
-                       var firstName = nameParts[0].ToLower();
-                       var lastName = nameParts[1].ToLower();
+            .RuleFor(c => c.Id, f => f.IndexFaker)
+            .RuleFor(c => c.Name, f => f.Name.FullName())
+            .RuleFor(c => c.Email, (f, c) =>
+            {
+                var nameParts = c.Name.Split(' ');
+                var firstName = nameParts[0].ToLower();
+                var lastName = nameParts[1].ToLower();
 
-                       var domain = f.PickRandom("yandex.ru", "mail.ru", "gmail.com");
-                       return f.Internet.Email(firstName: firstName, lastName: lastName, provider: domain);
-                   })
-                  .Generate(10);
+                var domain = f.PickRandom("yandex.ru", "mail.ru", "gmail.com");
+                return f.Internet.Email(firstName: firstName, lastName: lastName, provider: domain);
+            })
+            .Generate(10);
     }
 
     private List<Contact> Contacts { get; set; }
@@ -56,5 +56,10 @@ public class InMemoryStorage : IStorage
         contact.Name = dto.Name;
         contact.Email = dto.Email;
         return true;
+    }
+
+    public (List<Contact>, int TotalCount) GetContacts(int pageNumber, int pageSize)
+    {
+        return (Contacts.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList(), Contacts.Count);
     }
 }

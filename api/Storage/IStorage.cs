@@ -11,4 +11,5 @@ public interface IStorage
     bool Add(ContactDto dto);
     bool DeleteContactById(int id);
     bool UpdateContact(ContactDto dto, int id);
+    (List<Contact>, int TotalCount) GetContacts(int pageNumber, int pageSize);
 }
