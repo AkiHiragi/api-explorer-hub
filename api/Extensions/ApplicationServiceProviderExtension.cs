@@ -14,7 +14,7 @@ public static class ApplicationServiceProviderExtension
     {
         using var scope = provider.CreateScope();
         var initializer = scope.ServiceProvider.GetRequiredService<IInitializer>();
-        initializer.Initialize(20);
+        initializer.Initialize(200);
 
         return provider;
     }
