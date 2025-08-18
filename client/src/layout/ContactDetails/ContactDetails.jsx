@@ -3,7 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 
 const baseApiUrl = process.env.REACT_APP_API_URL;
-const ContactDetails = () => {
+const ContactDetails = ({onUpdate}) => {
     const [contact, setContact] = useState({id: "", name: "", email: ""});
     const {id} = useParams();
     const navigate = useNavigate();
@@ -18,23 +18,23 @@ const ContactDetails = () => {
         }, [id, navigate]
     )
 
-    const handleDelete = async () => {
+    const handleDelete = () => {
         const url = `${baseApiUrl}/contacts/${id}`;
         if (window.confirm(`Вы действительно хотите удалить контакт ${contact.name}?`)) {
-            const response = await axios.delete(url);
-            if (response.status === 204) {
-                navigate("/");
-            }
+            axios.delete(url).then(() => {
+                onUpdate();
+                navigate("/")
+            });
         }
     }
 
-    const handleUpdate = async () => {
+    const handleUpdate = () => {
         const url = `${baseApiUrl}/contacts/${id}`;
         if (contact.name.trim() !== "" && contact.email.trim() !== "") {
-            const response = await axios.put(url, contact);
-            if (response.status === 200) {
+            axios.put(url, contact).then(() => {
+                onUpdate();
                 navigate("/");
-            }
+            });
         } else
             alert("Пожалуйста введите корректные данные")
     }
