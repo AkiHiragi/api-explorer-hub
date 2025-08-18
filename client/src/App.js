@@ -2,11 +2,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import TableContact from "./layout/TableContact/TableContact";
 import {useEffect, useState} from "react";
-import FormContact from "./layout/FormContact/FormContact";
 import axios from "axios";
-import {Route, Routes, useLocation} from "react-router-dom";
+import {Link, Route, Routes, useLocation} from "react-router-dom";
 import ContactDetails from "./layout/ContactDetails/ContactDetails";
 import Pagination from "./layout/Pagination/Pagination";
+import AppendContact from "./layout/FormContact/AppendContact";
 
 const baseApiUrl = process.env.REACT_APP_API_URL;
 
@@ -28,29 +28,6 @@ const App = () => {
             );
     }, [currentPage, pageSize, location.pathname]);
 
-    const addContact = (contactName, contactEmail) => {
-        const newId = contacts.length > 0
-            ? Math.max(...contacts.map(contact => contact.id)) + 1
-            : 1;
-        const item = {
-            id: newId,
-            name: contactName,
-            email: contactEmail
-        }
-
-        let url = `${baseApiUrl}/contacts`;
-        axios.post(url, item);
-
-        url = `${baseApiUrl}/contacts/page?pageNumber=${currentPage}&pageSize=${pageSize}`;
-        axios.get(url).then(
-            res => {
-                setContacts(res.data.data);
-                setTotalPages(Math.ceil(res.data.totalCount / pageSize));
-            }
-        )
-
-    }
-
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     }
@@ -71,14 +48,15 @@ const App = () => {
                                 totalPages={totalPages}
                                 onPageChange={handlePageChange}
                             />
-                            <FormContact addContact={addContact}/>
+                            <Link to="/append"
+                                  className="btn btn-success mt-3">
+                                Добавить контакт
+                            </Link>
                         </div>
                     </div>
                 }/>
-                <Route
-                    path="/contact/:id"
-                    element={<ContactDetails/>}
-                />
+                <Route path="/contact/:id" element={<ContactDetails/>}/>
+                <Route path="/append" element={<AppendContact/>}/>
             </Routes>
         </div>
     );
